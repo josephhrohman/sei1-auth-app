@@ -39,6 +39,11 @@ app.post('/signup', (req, res) => {
   });
 });
 
+// GET Login Route
+app.get('/login', (req, res) => {
+  res.render('auth/login');
+});
+
 // --------------------------------------- START SERVER --------------------------------------- //
 
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
