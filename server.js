@@ -23,6 +23,11 @@ app.get('/', (req, res) => {
   res.send('<h1>Auth App</h1>');
 });
 
+// GET New User Route
+app.get('/signup', (req, res) => {
+  res.send('<h1>Signup</h1>');
+});
+
 // --------------------------------------- START SERVER --------------------------------------- //
 
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
