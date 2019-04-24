@@ -3,6 +3,9 @@ const bodyParser = require('body-parser');
 const app = express();
 const PORT = process.env.PORT || 4000;
 
+// View Engine
+app.set('view engine', 'ejs');
+
 // Database
 const db = require('./models');
 
@@ -25,7 +28,7 @@ app.get('/', (req, res) => {
 
 // GET New User Route
 app.get('/signup', (req, res) => {
-  res.send('<h1>Signup</h1>');
+  res.render('auth/signup');
 });
 
 // --------------------------------------- START SERVER --------------------------------------- //
