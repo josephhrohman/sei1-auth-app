@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const bcrypt = require('bcryptjs');
 const app = express();
 const PORT = process.env.PORT || 4000;
 
@@ -33,15 +34,60 @@ app.get('/signup', (req, res) => {
 
 // POST Create User Route
 app.post('/signup', (req, res) => {
-  db.User.create(req.body, (err, newUser) => {
-    if (err) return res.render('auth/signup', { errors: [err]});
-    res.redirect('/login');
+  const errors = [];
+
+  if (!req.body.name) {
+    errors.push({message: 'Please enter your name'});
+  }
+
+  if (!req.body.email) {
+    errors.push({message: 'Please enter your email'});
+  }
+
+  if (!req.body.password) {
+    errors.push({message: 'Please enter your password'});
+  }
+
+  if (req.body.password !== req.body.password2) {
+    errors.push({message: 'Your passwords do not match'});
+  }
+
+  if (errors.length) {
+    return res.render('auth/signup', {user: req.body, errors: errors});
+  }
+
+  bcrypt.genSalt(10, (err, salt) => {
+    if (err) return res.render('auth/signup', {user: req.body, errors: [{message: 'Something went wrong. Please try again'}]});
+
+    bcrypt.hash(req.body.password, salt, (err, hash) => {
+      if (err) return res.render('auth/signup', {user: req.body, errors: [{message: 'Something went wrong. Please try again'}]});
+
+      const newUser = {
+        name: req.body.name,
+        email: req.body.email,
+        password: hash,
+      }
+
+      db.User.create(newUser, (err, newUser) => {
+        if (err) return res.render('auth/signup', { errors: [err]});
+        res.redirect('/login');
+      });
+    });
   });
 });
 
 // GET Login Route
 app.get('/login', (req, res) => {
   res.render('auth/login');
+});
+
+// --------------------------------------- API ROUTEs --------------------------------------- //
+
+app.get('/api/v1/users', (req, res) => {
+  db.User.find((err, allUsers) => {
+    if (err) res.json(err);
+    res.json(allUsers);
+  });
 });
 
 // --------------------------------------- START SERVER --------------------------------------- //
