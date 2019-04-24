@@ -31,6 +31,14 @@ app.get('/signup', (req, res) => {
   res.render('auth/signup');
 });
 
+// POST Create User Route
+app.post('/signup', (req, res) => {
+  db.User.create(req.body, (err, newUser) => {
+    if (err) return res.render('auth/signup', { errors: [err]});
+    res.redirect('/login');
+  });
+});
+
 // --------------------------------------- START SERVER --------------------------------------- //
 
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
