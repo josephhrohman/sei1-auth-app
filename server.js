@@ -3,6 +3,9 @@ const bodyParser = require('body-parser');
 const app = express();
 const PORT = process.env.PORT || 4000;
 
+// Database
+const db = require('./models');
+
 // ---------------------------------------- MIDDLEWARE ---------------------------------------- //
 
 // Parse URL Encoded Form Data
